@@ -4,7 +4,17 @@ const User = require('../models/User')
 
 const createUser = async (req, res) => {
     try {
-        const user = await User.create(req.body)
+        const name = req.body.name
+        const email = req.body.email
+        const password = req.body.password
+
+        const salt = await bcrypt.genSalt(10)
+        const hash = await bcrypt.hash(password, salt)
+
+        const user = { name: name, email: email, password: hash }
+
+        //db save
+        const userData = await User.create(user)
         res.status(200).json(user)
     } catch (error) {
         console.error(error)
