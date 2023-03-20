@@ -3,6 +3,7 @@ const express = require('express')
 const dotenv = require('dotenv')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
+const cors = require('cors')
 
 //internal imports
 const userRouter = require('./routers/userRoutes')
@@ -27,6 +28,7 @@ db.getConnection()
     })
 
 // Initialize middleware
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(cookieParser())
