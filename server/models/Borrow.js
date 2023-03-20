@@ -38,6 +38,10 @@ const Borrow = sequelize.define('Borrow', {
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
+    isReturned: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
     createdAt: {
         type: DataTypes.DATE,
         allowNull: false,

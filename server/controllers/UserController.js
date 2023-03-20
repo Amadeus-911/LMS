@@ -20,6 +20,11 @@ const getBooks = async (req, res) => {
 
 const borrow = async (req, res) => {
     try {
+        const updateStock = async () => {
+            const book = await Book.findByPk(req.body.bookId)
+            await book.update({ inStock: book.inStock - 1 })
+        }
+
         const borrow = {
             bookId: req.body.bookId,
             userId: req.body.userId,
@@ -29,6 +34,8 @@ const borrow = async (req, res) => {
             returnDate: req.body.returnDate,
         }
         const result = await Borrow.create(borrow)
+        updateStock()
+
         res.status(200).json(result)
     } catch (error) {
         console.error(error)

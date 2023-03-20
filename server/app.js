@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser')
 //internal imports
 const userRouter = require('./routers/userRoutes')
 const authRouter = require('./routers/authRoutes')
+const librarianRouter = require('./routers/librarianRoutes')
 
 const db = require('./db')
 // Load environment variables from .env file
@@ -33,6 +34,7 @@ app.use(cookieParser())
 // Define routes and middleware
 app.use('/user', userRouter)
 app.use('/auth', authRouter)
+app.use('/librarian', librarianRouter)
 // ...
 
 // Start the server
