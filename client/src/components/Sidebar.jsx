@@ -19,7 +19,7 @@ const list = {
 const Item = ({ text, icon }) => {
     return (
         <ListItem disablePadding>
-            <ListItemButton sx={{ paddingX: '30px' }}>
+            <ListItemButton sx={{ paddingX: '20px' }}>
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText primary={text} />
             </ListItemButton>
@@ -29,7 +29,7 @@ const Item = ({ text, icon }) => {
 
 const Sidebar = () => {
     return (
-        <Box bgcolor='lightblue' flex={2} p={2} sx={{ display: { xs: 'none', sm: 'block' }, height: '100vh' }}>
+        <Box bgcolor='lightblue' flex={2} p={2} sx={{ display: { xs: 'none', sm: 'block' }, height: '90vh' }}>
             <List>
                 {Object.entries(list).map(([text, icon]) => (
                     <Item text={text} icon={icon} />
