@@ -1,16 +1,13 @@
 import React from 'react'
-import { Box, ListItemText, Typography } from '@mui/material'
-import { styled } from '@mui/material/styles'
+import { Box, ListItemText } from '@mui/material'
 import { List } from '@mui/material'
 import { ListItem } from '@mui/material'
 import { ListItemIcon } from '@mui/material'
 import { ListItemButton } from '@mui/material'
-import InboxIcon from '@mui/icons-material/Inbox'
 import PersonIcon from '@mui/icons-material/Person'
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks'
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos'
 import EventAvailableIcon from '@mui/icons-material/EventAvailable'
-import AddIcon from '@mui/icons-material/Add'
 
 const list = {
     Profile: <PersonIcon />,
@@ -22,7 +19,7 @@ const list = {
 const Item = ({ text, icon }) => {
     return (
         <ListItem disablePadding>
-            <ListItemButton>
+            <ListItemButton sx={{ paddingX: '30px' }}>
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText primary={text} />
             </ListItemButton>
@@ -32,7 +29,7 @@ const Item = ({ text, icon }) => {
 
 const Sidebar = () => {
     return (
-        <Box bgcolor='lightblue' flex={2} sx={{ display: { xs: 'none', sm: 'block' }, height: '100%' }}>
+        <Box bgcolor='lightblue' flex={2} p={2} sx={{ display: { xs: 'none', sm: 'block' }, height: '100vh' }}>
             <List>
                 {Object.entries(list).map(([text, icon]) => (
                     <Item text={text} icon={icon} />
