@@ -7,24 +7,36 @@ const sequelize = new Sequelize('library', 'root', '', {
 })
 
 // Define the database model
-const User = sequelize.define('User', {
+const Borrow = sequelize.define('Borrow', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
     },
+    bookId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
     name: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    email: {
+    author: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
     },
-    password: {
+    genre: {
         type: DataTypes.STRING,
         allowNull: false,
+    },
+    returnDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
     createdAt: {
         type: DataTypes.DATE,
@@ -41,8 +53,8 @@ const User = sequelize.define('User', {
 // Synchronize the database model with the MySQL database
 ;(async () => {
     await sequelize.sync({ force: false })
-    console.log('User model synchronized with MySQL database successfully')
+    console.log('Borrow model synchronized with MySQL database successfully')
 })()
 
 // Export the database model
-module.exports = User
+module.exports = Borrow

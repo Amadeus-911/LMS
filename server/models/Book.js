@@ -7,7 +7,7 @@ const sequelize = new Sequelize('library', 'root', '', {
 })
 
 // Define the database model
-const User = sequelize.define('User', {
+const Book = sequelize.define('Book', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -17,14 +17,17 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    email: {
+    author: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
     },
-    password: {
+    genre: {
         type: DataTypes.STRING,
         allowNull: false,
+    },
+    inStock: {
+        type: DataTypes.INTEGER,
+        defaultValue: 1,
     },
     createdAt: {
         type: DataTypes.DATE,
@@ -41,8 +44,8 @@ const User = sequelize.define('User', {
 // Synchronize the database model with the MySQL database
 ;(async () => {
     await sequelize.sync({ force: false })
-    console.log('User model synchronized with MySQL database successfully')
+    console.log('Book model synchronized with MySQL database successfully')
 })()
 
 // Export the database model
-module.exports = User
+module.exports = Book
