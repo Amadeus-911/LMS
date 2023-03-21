@@ -36,8 +36,8 @@ const AddBook = () => {
         setAuthor(event.target.value)
     }
 
-    const handleGenreChange = (event) => {
-        setGenre(event.target.value)
+    const handleGenreChange = (event, value) => {
+        setGenre(value)
     }
 
     const handleSubmit = async (event) => {
@@ -72,7 +72,8 @@ const AddBook = () => {
                 disablePortal
                 id='combo-box-demo'
                 options={genres}
-                renderInput={(params) => <TextField {...params} required type={'text'} label='Genre' value={genre} onChange={handleGenreChange} />}
+                onChange={handleGenreChange}
+                renderInput={(params) => <TextField {...params} required type={'text'} label='Genre' value={genre} />}
             />
             <Button onClick={handleSubmit} variant='contained' startIcon={<AddIcon />}>
                 Add

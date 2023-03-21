@@ -4,7 +4,7 @@ import { Toolbar } from '@mui/material'
 
 const Navbar = () => {
     return (
-        <AppBar position='sticky'>
+        <AppBar position='sticky' sx={{ width: '100%' }}>
             <Toolbar>Navbar</Toolbar>
         </AppBar>
     )
