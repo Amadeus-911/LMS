@@ -8,11 +8,13 @@ import PersonIcon from '@mui/icons-material/Person'
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks'
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos'
 import EventAvailableIcon from '@mui/icons-material/EventAvailable'
+import UpdateIcon from '@mui/icons-material/Update'
 
 const list = {
     Profile: <PersonIcon />,
     Books: <LibraryBooksIcon />,
     Add: <AddToPhotosIcon />,
+    Update: <UpdateIcon />,
     Due: <EventAvailableIcon />,
 }
 

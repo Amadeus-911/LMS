@@ -6,13 +6,13 @@ import Main from './components/Main'
 import Sidebar from './components/Sidebar'
 import Navbar from './components/Navbar'
 
-export default function Home() {
+export default function Home({ view }) {
     return (
         <Box sx={{ flexGrow: 1 }}>
             <Navbar />
             <Stack direction={'row'}>
                 <Sidebar />
-                <Main />
+                <Main view={view} />
             </Stack>
         </Box>
     )

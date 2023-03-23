@@ -54,8 +54,7 @@ const Books = () => {
     const handleSearchChange = async (event) => {
         setSearch(event.target.value)
         console.log(event.target.value)
-        const filteredBooks = books.filter((item) => item.name.toLowerCase().startsWith(search.toLowerCase()))
-        if (event.target.value == '') {
+        if (event.target.value === '') {
             setFiltered(books)
         } else {
             await setFiltered(books.filter((item) => item.name.toLowerCase().startsWith(search.toLowerCase())))
