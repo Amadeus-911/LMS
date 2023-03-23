@@ -1,11 +1,8 @@
 const { Sequelize, DataTypes } = require('sequelize')
+const connectToDatabase = require('../db')
 
 // Create a Sequelize instance
-const sequelize = new Sequelize('library', 'root', '', {
-    host: 'localhost',
-    dialect: 'mysql',
-})
-
+const sequelize = connectToDatabase()
 // Define the database model
 const Borrow = sequelize.define('Borrow', {
     id: {

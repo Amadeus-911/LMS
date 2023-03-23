@@ -10,22 +10,12 @@ const userRouter = require('./routers/userRoutes')
 const authRouter = require('./routers/authRoutes')
 const librarianRouter = require('./routers/librarianRoutes')
 
-const db = require('./db')
+// const db = require('./db')
 // Load environment variables from .env file
 dotenv.config()
 
 // Initialize express app
 const app = express()
-
-//connect to db
-db.getConnection()
-    .then((connection) => {
-        console.log('Connection to MySQL database established successfully')
-        connection.release()
-    })
-    .catch((error) => {
-        console.error('Error connecting to MySQL database:', error)
-    })
 
 // Initialize middleware
 app.use(cors())
@@ -37,6 +27,11 @@ app.use(cookieParser())
 app.use('/user', userRouter)
 app.use('/auth', authRouter)
 app.use('/librarian', librarianRouter)
+function errorHandler(err, req, res, next) {
+    console.error(err.stack)
+    res.status(500).send('Something went wrong!')
+}
+app.use(errorHandler)
 // ...
 
 // Start the server
