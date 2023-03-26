@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { styled } from '@mui/material/styles'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, TablePagination, TextField } from '@mui/material'
+import {
+    Button,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    IconButton,
+    TablePagination,
+    TextField,
+} from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import axios from 'axios'
@@ -19,6 +31,7 @@ const Books = () => {
     const [books, setBooks] = useState([])
     const [search, setSearch] = useState('')
     const [filtered, setFiltered] = useState([])
+    const [isAdmin, setIsAdmin] = useState(false)
 
     useEffect(() => {
         axios
@@ -51,13 +64,13 @@ const Books = () => {
             })
     }
 
-    const handleSearchChange = async (event) => {
+    const handleSearchChange = (event) => {
         setSearch(event.target.value)
         console.log(event.target.value)
         if (event.target.value === '') {
             setFiltered(books)
         } else {
-            await setFiltered(books.filter((item) => item.name.toLowerCase().startsWith(search.toLowerCase())))
+            setFiltered(books.filter((item) => item.name.toLowerCase().includes(search.toLowerCase())))
         }
     }
 
@@ -71,7 +84,7 @@ const Books = () => {
     }
 
     return (
-        <Stack spacing={2} sx={{ width: '700px' }}>
+        <Stack spacing={2} sx={{ width: { xs: '250px', sm: '700px' }, alignContent: 'center' }}>
             <TextField label={'Search'} variant='outlined' type='text' autoComplete='text' autoFocus value={search} onChange={handleSearchChange} />
             <TableContainer component={Paper}>
                 <Table className={classes.table} aria-label='book table'>
@@ -84,7 +97,7 @@ const Books = () => {
                             <TableCell>Actions</TableCell>
                         </TableRow>
                     </TableHead>
-                    <TableBody>
+                    {/* <TableBody>
                         {(rowsPerPage > 0 ? filtered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : filtered).map((book) => (
                             <TableRow key={book.id}>
                                 <TableCell>{book.id}</TableCell>
@@ -98,6 +111,33 @@ const Books = () => {
                                     <IconButton onClick={() => handleDeleteBook(book.id)}>
                                         <DeleteIcon />
                                     </IconButton>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody> */}
+                    <TableBody>
+                        {(rowsPerPage > 0 ? filtered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : filtered).map((book) => (
+                            <TableRow key={book.id}>
+                                <TableCell>{book.id}</TableCell>
+                                <TableCell>{book.name}</TableCell>
+                                <TableCell>{book.author}</TableCell>
+                                <TableCell>{book.genre}</TableCell>
+                                <TableCell>
+                                    {isAdmin ? (
+                                        <>
+                                            <IconButton>
+                                                <EditIcon />
+                                            </IconButton>
+                                            <IconButton onClick={() => handleDeleteBook(book.id)}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </>
+                                    ) : (
+                                        <Button variant='contained' color='primary'>
+                                            {/* {book.isBorrowed ? 'Return' : 'Borrow'} */}
+                                            Borrow
+                                        </Button>
+                                    )}
                                 </TableCell>
                             </TableRow>
                         ))}
