@@ -32,6 +32,7 @@ const Books = () => {
     const [search, setSearch] = useState('')
     const [filtered, setFiltered] = useState([])
     const [isAdmin, setIsAdmin] = useState(false)
+    const userId = 1
 
     useEffect(() => {
         axios
@@ -62,6 +63,24 @@ const Books = () => {
             .catch((error) => {
                 console.log(error)
             })
+    }
+
+    const handleBorrowBook = async (book, userId) => {
+        const now = new Date() // get the current date-time value
+        const twoWeeksFromNow = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000)
+        try {
+            const response = await axios.post('http://localhost:3001/user/borrow', {
+                bookId: book.id,
+                userId: userId,
+                name: book.name,
+                author: book.author,
+                genre: book.genre,
+                returnDate: twoWeeksFromNow,
+            })
+            console.log(response.data)
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     const handleSearchChange = (event) => {
@@ -132,10 +151,17 @@ const Books = () => {
                                                 <DeleteIcon />
                                             </IconButton>
                                         </>
-                                    ) : (
-                                        <Button variant='contained' color='primary'>
-                                            {/* {book.isBorrowed ? 'Return' : 'Borrow'} */}
+                                    ) : // <Button variant='contained' color='primary'>
+                                    //     {/* {book.isBorrowed ? 'Return' : 'Borrow'} */}
+                                    //     Borrow
+                                    // </Button>
+                                    book.inStock > 0 ? (
+                                        <Button variant='contained' color='primary' onClick={() => handleBorrowBook(book, userId)}>
                                             Borrow
+                                        </Button>
+                                    ) : (
+                                        <Button variant='contained' color='secondary'>
+                                            Wish
                                         </Button>
                                     )}
                                 </TableCell>
