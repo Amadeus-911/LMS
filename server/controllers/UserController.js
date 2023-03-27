@@ -18,6 +18,16 @@ const getBooks = async (req, res) => {
     }
 }
 
+const getBorrowedBooks = async (req, res) => {
+    try {
+        const books = await Borrow.findAll({ where: { userId: req.params.id } })
+        res.json(books)
+    } catch (error) {
+        console.log(error)
+        res.sendStatus(500)
+    }
+}
+
 const borrow = async (req, res) => {
     try {
         const updateStock = async () => {
@@ -43,4 +53,4 @@ const borrow = async (req, res) => {
     }
 }
 
-module.exports = { getBooks, borrow }
+module.exports = { getBooks, borrow, getBorrowedBooks }

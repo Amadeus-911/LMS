@@ -10,6 +10,15 @@ const useStyles = styled({
     },
 })
 
+function remainingDays(futureDateTime) {
+    const oneDayMs = 24 * 60 * 60 * 1000
+    const futureDateMs = new Date(futureDateTime).getTime()
+    const currentDateMs = new Date().getTime()
+    const differenceMs = futureDateMs - currentDateMs
+    const remainingDays = Math.ceil(differenceMs / oneDayMs)
+    return remainingDays
+}
+
 const Dues = () => {
     const classes = useStyles()
     const [page, setPage] = useState(0)
@@ -22,7 +31,7 @@ const Dues = () => {
 
     useEffect(() => {
         axios
-            .get('http://localhost:3001/user/books')
+            .get(`http://localhost:3001/user/borrowed/${userId}`)
             .then((response) => {
                 setBooks(response.data)
                 setFiltered(response.data)
@@ -82,6 +91,7 @@ const Dues = () => {
                             <TableCell>Name</TableCell>
                             <TableCell>Author</TableCell>
                             <TableCell>Genre</TableCell>
+                            <TableCell>Due in</TableCell>
                             <TableCell>Actions</TableCell>
                         </TableRow>
                     </TableHead>
@@ -92,6 +102,7 @@ const Dues = () => {
                                 <TableCell>{book.name}</TableCell>
                                 <TableCell>{book.author}</TableCell>
                                 <TableCell>{book.genre}</TableCell>
+                                <TableCell>{remainingDays(book.returnDate)} Days</TableCell>
                                 <TableCell>
                                     <Button variant='contained' color='primary' onClick={() => handleReturnBook(book, userId)}>
                                         Return
