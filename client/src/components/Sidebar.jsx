@@ -22,7 +22,7 @@ const list = [
 const Item = ({ text, icon, link }) => {
     return (
         <ListItem disablePadding>
-            <ListItemButton sx={{ paddingX: '20px' }} LinkComponent={Link} to={link}>
+            <ListItemButton sx={{ paddingX: '20px' }} component={Link} to={link}>
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText primary={text} />
             </ListItemButton>
