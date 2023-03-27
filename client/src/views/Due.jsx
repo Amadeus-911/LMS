@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { styled } from '@mui/material/styles'
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, TextField } from '@mui/material'
+import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, TextField } from '@mui/material'
 import axios from 'axios'
 import { Stack } from '@mui/system'
+
+import Toast from '../components/Utilities'
 
 const useStyles = styled({
     table: {
@@ -26,36 +28,40 @@ const Dues = () => {
     const [books, setBooks] = useState([])
     const [search, setSearch] = useState('')
     const [filtered, setFiltered] = useState([])
-    const [isClicked, setIsClicked] = useState(false)
+    const [count, setCount] = useState(0)
+    const [showToast, setShowToast] = useState(false)
     const userId = 1 // TODO get from local storage
 
     useEffect(() => {
         axios
-            .get(`http://localhost:3001/user/borrowed/${userId}`)
+            .get(`http://localhost:3001/user/due/${userId}`)
             .then((response) => {
                 setBooks(response.data)
                 setFiltered(response.data)
-                setIsClicked(false)
             })
             .catch((error) => {
                 console.log(error)
             })
-    }, [isClicked])
+    }, [count])
 
-    const handleReturnBook = async (book, userId) => {
-        const now = new Date() // get the current date-time value
-        const twoWeeksFromNow = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000)
+    const handleReturnBook = async (book) => {
+        // const now = new Date() // get the current date-time value
+        // const twoWeeksFromNow = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000)
         try {
-            const response = await axios.post('http://localhost:3001/user/borrow', {
-                bookId: book.id,
+            const response = await axios.post(`http://localhost:3001/user/return/${book.id}`, {
+                bookId: book.bookId,
                 userId: userId,
                 name: book.name,
                 author: book.author,
                 genre: book.genre,
-                returnDate: twoWeeksFromNow,
             })
+            setCount((count) => count + 1)
+            console.log(count)
+            setShowToast(true)
+            setTimeout(() => {
+                setShowToast(false)
+            }, 2000)
             console.log(response.data)
-            setIsClicked(true)
         } catch (error) {
             console.error(error)
         }
@@ -81,48 +87,59 @@ const Dues = () => {
     }
 
     return (
-        <Stack spacing={2} sx={{ width: { xs: '250px', sm: '700px' }, alignContent: 'center' }}>
-            <TextField label={'Search'} variant='outlined' type='text' autoComplete='text' autoFocus value={search} onChange={handleSearchChange} />
-            <TableContainer component={Paper}>
-                <Table className={classes.table} aria-label='book table'>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>ID</TableCell>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Author</TableCell>
-                            <TableCell>Genre</TableCell>
-                            <TableCell>Due in</TableCell>
-                            <TableCell>Actions</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {(rowsPerPage > 0 ? filtered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : filtered).map((book) => (
-                            <TableRow key={book.id}>
-                                <TableCell>{book.id}</TableCell>
-                                <TableCell>{book.name}</TableCell>
-                                <TableCell>{book.author}</TableCell>
-                                <TableCell>{book.genre}</TableCell>
-                                <TableCell>{remainingDays(book.returnDate)} Days</TableCell>
-                                <TableCell>
-                                    <Button variant='contained' color='primary' onClick={() => handleReturnBook(book, userId)}>
-                                        Return
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-                <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component='div'
-                    count={books.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
+        <Box style={{ position: 'relative' }}>
+            <Stack spacing={2} sx={{ width: { xs: '250px', sm: '700px' }, alignContent: 'center' }}>
+                <TextField
+                    label={'Search'}
+                    variant='outlined'
+                    type='text'
+                    autoComplete='text'
+                    autoFocus
+                    value={search}
+                    onChange={handleSearchChange}
                 />
-            </TableContainer>
-        </Stack>
+                <TableContainer component={Paper}>
+                    <Table className={classes.table} aria-label='book table'>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>ID</TableCell>
+                                <TableCell>Name</TableCell>
+                                <TableCell>Author</TableCell>
+                                <TableCell>Genre</TableCell>
+                                <TableCell>Due in</TableCell>
+                                <TableCell>Actions</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {(rowsPerPage > 0 ? filtered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : filtered).map((book) => (
+                                <TableRow key={book.id}>
+                                    <TableCell>{book.id}</TableCell>
+                                    <TableCell>{book.name}</TableCell>
+                                    <TableCell>{book.author}</TableCell>
+                                    <TableCell>{book.genre}</TableCell>
+                                    <TableCell>{remainingDays(book.returnDate)} Days</TableCell>
+                                    <TableCell>
+                                        <Button variant='contained' color='primary' onClick={() => handleReturnBook(book)}>
+                                            Return
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component='div'
+                        count={books.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                </TableContainer>
+                {showToast && <Toast severity={'success'} msg='Book Returned Successfully' />}
+            </Stack>
+        </Box>
     )
 }
 

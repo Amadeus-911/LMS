@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { styled } from '@mui/material/styles'
 import {
+    Box,
     Button,
     Table,
     TableBody,
@@ -18,6 +19,8 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import axios from 'axios'
 import { Stack } from '@mui/system'
 
+import Toast from '../components/Utilities'
+
 const useStyles = styled({
     table: {
         minWidth: 250,
@@ -32,6 +35,8 @@ const Books = () => {
     const [search, setSearch] = useState('')
     const [filtered, setFiltered] = useState([])
     const [isClicked, setIsClicked] = useState(false)
+    const [showToast, setShowToast] = useState(false)
+
     const userId = 1 // TODO get from local storage
     const isAdmin = false
 
@@ -80,6 +85,10 @@ const Books = () => {
                 genre: book.genre,
                 returnDate: twoWeeksFromNow,
             })
+            setShowToast(true)
+            setTimeout(() => {
+                setShowToast(false)
+            }, 2000)
             console.log(response.data)
             setIsClicked(true)
         } catch (error) {
@@ -107,20 +116,29 @@ const Books = () => {
     }
 
     return (
-        <Stack spacing={2} sx={{ width: { xs: '250px', sm: '700px' }, alignContent: 'center' }}>
-            <TextField label={'Search'} variant='outlined' type='text' autoComplete='text' autoFocus value={search} onChange={handleSearchChange} />
-            <TableContainer component={Paper}>
-                <Table className={classes.table} aria-label='book table'>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>ID</TableCell>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Author</TableCell>
-                            <TableCell>Genre</TableCell>
-                            <TableCell>Actions</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    {/* <TableBody>
+        <Box style={{ position: 'relative' }}>
+            <Stack spacing={2} sx={{ width: { xs: '250px', sm: '700px' }, alignContent: 'center' }}>
+                <TextField
+                    label={'Search'}
+                    variant='outlined'
+                    type='text'
+                    autoComplete='text'
+                    autoFocus
+                    value={search}
+                    onChange={handleSearchChange}
+                />
+                <TableContainer component={Paper}>
+                    <Table className={classes.table} aria-label='book table'>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>ID</TableCell>
+                                <TableCell>Name</TableCell>
+                                <TableCell>Author</TableCell>
+                                <TableCell>Genre</TableCell>
+                                <TableCell>Actions</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        {/* <TableBody>
                         {(rowsPerPage > 0 ? filtered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : filtered).map((book) => (
                             <TableRow key={book.id}>
                                 <TableCell>{book.id}</TableCell>
@@ -138,52 +156,54 @@ const Books = () => {
                             </TableRow>
                         ))}
                     </TableBody> */}
-                    <TableBody>
-                        {(rowsPerPage > 0 ? filtered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : filtered).map((book) => (
-                            <TableRow key={book.id}>
-                                <TableCell>{book.id}</TableCell>
-                                <TableCell>{book.name}</TableCell>
-                                <TableCell>{book.author}</TableCell>
-                                <TableCell>{book.genre}</TableCell>
-                                <TableCell>
-                                    {isAdmin ? (
-                                        <>
-                                            <IconButton>
-                                                <EditIcon />
-                                            </IconButton>
-                                            <IconButton onClick={() => handleDeleteBook(book.id)}>
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </>
-                                    ) : // <Button variant='contained' color='primary'>
-                                    //     {/* {book.isBorrowed ? 'Return' : 'Borrow'} */}
-                                    //     Borrow
-                                    // </Button>
-                                    book.inStock > 0 ? (
-                                        <Button variant='contained' color='primary' onClick={() => handleBorrowBook(book, userId)}>
-                                            Borrow
-                                        </Button>
-                                    ) : (
-                                        <Button variant='contained' color='secondary'>
-                                            Wish
-                                        </Button>
-                                    )}
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-                <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component='div'
-                    count={books.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-            </TableContainer>
-        </Stack>
+                        <TableBody>
+                            {(rowsPerPage > 0 ? filtered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : filtered).map((book) => (
+                                <TableRow key={book.id}>
+                                    <TableCell>{book.id}</TableCell>
+                                    <TableCell>{book.name}</TableCell>
+                                    <TableCell>{book.author}</TableCell>
+                                    <TableCell>{book.genre}</TableCell>
+                                    <TableCell>
+                                        {isAdmin ? (
+                                            <>
+                                                <IconButton>
+                                                    <EditIcon />
+                                                </IconButton>
+                                                <IconButton onClick={() => handleDeleteBook(book.id)}>
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </>
+                                        ) : // <Button variant='contained' color='primary'>
+                                        //     {/* {book.isBorrowed ? 'Return' : 'Borrow'} */}
+                                        //     Borrow
+                                        // </Button>
+                                        book.inStock > 0 ? (
+                                            <Button variant='contained' color='primary' onClick={() => handleBorrowBook(book, userId)}>
+                                                Borrow
+                                            </Button>
+                                        ) : (
+                                            <Button variant='contained' color='secondary'>
+                                                Wish
+                                            </Button>
+                                        )}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component='div'
+                        count={books.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                </TableContainer>
+                {showToast && <Toast severity={'success'} msg='Book Borrowed Successfully' />}
+            </Stack>
+        </Box>
     )
 }
 
