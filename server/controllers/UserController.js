@@ -53,4 +53,22 @@ const borrow = async (req, res) => {
     }
 }
 
-module.exports = { getBooks, borrow, getBorrowedBooks }
+const returnBook = async (req, res) => {
+    try {
+        //find book id
+        const id = req.params.id
+        const bookId = req.body.bookId
+
+        const book = await Book.findByPk(bookId)
+        await book.update({ inStock: book.inStock + 1 })
+
+        //update borrowed table isReturned
+        const borrowed = await Borrow.findOne({ id: id })
+        await borrowed.update({ isReturned: true })
+    } catch (error) {
+        console.error(error)
+        res.sendStatus(500)
+    }
+}
+
+module.exports = { getBooks, borrow, getBorrowedBooks, returnBook }
