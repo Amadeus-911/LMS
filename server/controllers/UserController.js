@@ -85,7 +85,7 @@ const returnBook = async (req, res) => {
 
 const getBooksTest = async (req, res) => {
     const page = parseInt(req.query.page) || 1
-    const limit = parseInt(req.query.limit) || 10
+    const limit = parseInt(req.query.limit) || 20
 
     const offset = (page - 1) * limit
 
@@ -112,10 +112,13 @@ const loadMore = async (req, res) => {
     const offset = (page - 1) * limit
     try {
         const books = await Book.findAll({
-            offset,
             limit,
+            offset,
         })
-        res.json(books)
+        res.json({
+            books,
+            page,
+        })
     } catch (error) {
         console.error(error)
         res.status(500).send('Internal server error')
@@ -143,7 +146,10 @@ const searchBooks = async (req, res) => {
         const queryObject = queryString.parse(req.url.split('?')[1])
         const term = queryObject.search // "term"
         const filteredBooks = await search(term)
-        res.json(filteredBooks)
+        res.json({
+            filteredBooks,
+            count: filteredBooks.length,
+        })
     } catch (error) {
         console.log(error)
     }

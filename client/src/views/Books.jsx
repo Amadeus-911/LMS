@@ -38,6 +38,9 @@ const Books = () => {
     const [showToast, setShowToast] = useState(false)
 
     const [backendPage, setBackendPage] = useState(0)
+    const [isMounted, setIsMounted] = useState(false)
+    const [currBooks, setCurrBooks] = useState(0)
+    const [totalBooks, setTotalBooks] = useState(0)
 
     const userId = 1 // TODO get from local storage
     const isAdmin = false
@@ -46,16 +49,19 @@ const Books = () => {
         const fetchData = async () => {
             try {
                 const response = await axios.get('http://localhost:3001/user/totalnum')
+                setTotalBooks(response.data.totalBooks)
                 if (response.data.totalBooks < 50) {
                     const response = await axios.get('http://localhost:3001/user/books')
                     setBooks(response.data)
                     setFiltered(response.data)
+                    setCurrBooks(response.data.length)
                     setIsClicked(false)
                 } else {
                     const response = await axios.get('http://localhost:3001/user/book')
                     setBooks(response.data.books)
                     setFiltered(response.data.books)
                     setBackendPage(response.data.currentPage)
+                    setCurrBooks(response.data.books.length)
                     setIsClicked(false)
                 }
             } catch (error) {
@@ -112,6 +118,7 @@ const Books = () => {
     const handleSearchChange = (event) => {
         const { value } = event.target
         setSearch(value)
+        setIsMounted(true)
     }
 
     useEffect(() => {
@@ -130,15 +137,18 @@ const Books = () => {
                         search: search,
                     },
                 })
-                console.log(response)
-                setFiltered(response.data)
+                console.log(response.data)
+                setFiltered(response.data.filteredBooks)
                 setPage(0)
             }
-            fetchData()
+            if (isMounted) {
+                fetchData()
+                setIsMounted(false)
+            }
         } catch (error) {
             console.log(error)
         }
-    }, [books, search])
+    }, [search, isMounted])
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage)
@@ -153,17 +163,25 @@ const Books = () => {
     const handleLoadMoreBooks = async () => {
         try {
             console.log('hit')
-
-            const response = await axios.get(`http://localhost:3001/user/load`, {
-                params: {
-                    page: backendPage + 1, // request next page of books
-                    limit: 20, // request same number of rows per page
-                },
-            })
-            const newBooks = response.data
-            setBooks([...books, ...newBooks])
-            setFiltered([...books]) // append new books to the current list
-            setPage(page + 1) // update current page
+            console.log(currBooks, totalBooks)
+            if (currBooks < totalBooks) {
+                let limit = 20
+                if (currBooks + limit > totalBooks) {
+                    limit = totalBooks - currBooks
+                }
+                const response = await axios.get(`http://localhost:3001/user/load`, {
+                    params: {
+                        page: backendPage + 1, // request next page of books
+                        limit: limit, // request same number of rows per page
+                    },
+                })
+                const newBooks = response.data.books
+                setBooks([...books, ...newBooks])
+                setFiltered([...books]) // append new books to the current list
+                setCurrBooks(books.length)
+                setBackendPage(response.data.page)
+                setPage(page + 1) // update current page
+            }
         } catch (error) {
             console.error(error)
         }
@@ -230,7 +248,7 @@ const Books = () => {
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 25]}
                         component='div'
-                        count={books.length}
+                        count={filtered.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}
