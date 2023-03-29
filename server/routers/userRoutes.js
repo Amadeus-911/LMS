@@ -10,10 +10,12 @@ const {
     getBooksTest,
     getNumberOfBooks,
     loadMore,
+    getBook,
     searchBooks,
 } = require('../controllers/UserController')
 
 router.get('/books', getBooks)
+router.get('/book/:id', getBook)
 router.get('/totalnum', getNumberOfBooks)
 router.get('/load', loadMore)
 router.get('/search', searchBooks)

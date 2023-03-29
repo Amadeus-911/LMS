@@ -19,6 +19,21 @@ const getBooks = async (req, res) => {
     }
 }
 
+const getBook = async (req, res) => {
+    const id = req.params.id
+    try {
+        const book = await Book.findByPk(id)
+
+        // sql = 'SELECT * FROM BOOKS'
+        // const [rows] = await db.query(sql)
+
+        res.json(book)
+    } catch (error) {
+        console.error(error)
+        res.sendStatus(500)
+    }
+}
+
 const getBorrowedBooks = async (req, res) => {
     try {
         const books = await Borrow.findAll({ where: { userId: req.params.id } })
@@ -160,4 +175,4 @@ const getNumberOfBooks = async (req, res) => {
     res.json({ totalBooks })
 }
 
-module.exports = { getBooks, borrow, getBorrowedBooks, getDueBooks, returnBook, getBooksTest, getNumberOfBooks, loadMore, searchBooks }
+module.exports = { getBooks, borrow, getBorrowedBooks, getDueBooks, returnBook, getBooksTest, getNumberOfBooks, loadMore, searchBooks, getBook }

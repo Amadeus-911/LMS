@@ -5,6 +5,7 @@ import AddBook from './views/AddBook'
 import Books from './views/Books'
 import Dues from './views/Due'
 import Home from './Home'
+import Update from './views/Update'
 
 function App() {
     return (
@@ -13,7 +14,7 @@ function App() {
                 <Route path='/add' element={<Home view={<AddBook />} />} />
                 <Route path='/books' element={<Home view={<Books />} />} />
                 <Route path='/due' element={<Home view={<Dues />} />} />
-                <Route path='/update' component={<Home />} />
+                <Route exact path='/update/:id' element={<Home view={<Update />} />} />
             </Routes>
         </Router>
     )

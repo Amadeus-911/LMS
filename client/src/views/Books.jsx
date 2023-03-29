@@ -18,6 +18,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import axios from 'axios'
 import { Stack } from '@mui/system'
+import { Link } from 'react-router-dom'
 
 import Toast from '../components/Utilities'
 
@@ -43,7 +44,7 @@ const Books = () => {
     const [totalBooks, setTotalBooks] = useState(0)
 
     const userId = 1 // TODO get from local storage
-    const isAdmin = false
+    const isAdmin = true
 
     useEffect(() => {
         const fetchData = async () => {
@@ -220,7 +221,7 @@ const Books = () => {
                                     <TableCell>
                                         {isAdmin ? (
                                             <>
-                                                <IconButton>
+                                                <IconButton component={Link} to={`/update/${book.id}`}>
                                                     <EditIcon />
                                                 </IconButton>
                                                 <IconButton onClick={() => handleDeleteBook(book.id)}>
