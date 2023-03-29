@@ -1,2 +1,2 @@
 # LMS
-This is Library Management system built upon React , Express and Mysql
+This is a Library Management system built upon React , Express and Mysql
