@@ -48,6 +48,7 @@ const Update = () => {
             }
         }
         fetchData()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const handleBookIdChange = (event) => {
@@ -72,13 +73,6 @@ const Update = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-
-        const data = {
-            name: name,
-            author: author,
-            genre: genre,
-            inStock: stock,
-        }
 
         try {
             const response = await axios.put('http://localhost:3001/librarian/update/' + bookId, {
