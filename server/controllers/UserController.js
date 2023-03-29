@@ -82,4 +82,27 @@ const returnBook = async (req, res) => {
     }
 }
 
-module.exports = { getBooks, borrow, getBorrowedBooks, getDueBooks, returnBook }
+const getBooksTest = async (req, res) => {
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+
+    const offset = (page - 1) * limit
+
+    const books = await Book.findAll({
+        limit,
+        offset,
+    })
+
+    const totalBooks = await Book.count({})
+
+    const totalPages = Math.ceil(totalBooks / limit)
+
+    res.json({
+        data: books,
+        currentPage: page,
+        totalPages,
+        totalItems: totalBooks,
+    })
+}
+
+module.exports = { getBooks, borrow, getBorrowedBooks, getDueBooks, returnBook, getBooksTest }
