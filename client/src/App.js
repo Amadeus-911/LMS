@@ -6,11 +6,13 @@ import Books from './views/Books'
 import Dues from './views/Due'
 import Home from './Home'
 import Update from './views/Update'
+import SignIn from './views/Login'
 
 function App() {
     return (
         <Router>
             <Routes>
+                <Route path='/login' element={<SignIn />} />
                 <Route path='/add' element={<Home view={<AddBook />} />} />
                 <Route path='/books' element={<Home view={<Books />} />} />
                 <Route path='/due' element={<Home view={<Dues />} />} />

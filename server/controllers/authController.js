@@ -32,19 +32,24 @@ const login = async (req, res) => {
             where: { email },
         })
 
-        bcrypt.compare(password, user.password, (error, isMatch) => {
-            if (error) {
-                console.error(error)
-            } else if (isMatch) {
-                //generate token and send it
-                const payload = { email: email }
-                const secret = process.env.JWT_SECRET
-                const token = jwt.sign(payload, secret, { expiresIn: process.env.TOKEN_EXPIRY })
-                res.status(200).json({ token })
-            } else {
-                res.status(401).json({ message: 'Invalid Email or Password' })
-            }
-        })
+        if (user) {
+            const userPass = user.password
+
+            bcrypt.compare(password, userPass, (error, isMatch) => {
+                if (error) {
+                    console.error(error)
+                } else if (isMatch) {
+                    //generate token and send it
+                    //todo change payload
+                    const payload = { email: email, userId: user.id, role: user.role }
+                    const secret = process.env.JWT_SECRET
+                    const token = jwt.sign(payload, secret, { expiresIn: process.env.TOKEN_EXPIRY })
+                    res.status(200).json({ token })
+                } else {
+                    res.status(200).json({ message: 'Invalid Email or Password' })
+                }
+            })
+        }
     } catch (error) {
         console.error(error)
         res.status(500).json({ message: 'Internal Error' })
