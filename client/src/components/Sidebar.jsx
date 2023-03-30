@@ -15,7 +15,7 @@ const list = [
     { text: 'Profile', icon: <PersonIcon />, link: '/profile' },
     { text: 'Books', icon: <LibraryBooksIcon />, link: '/books' },
     { text: 'Add', icon: <AddToPhotosIcon />, link: '/add' },
-    { text: 'Update', icon: <UpdateIcon />, link: '/update' },
+    { text: 'Update', icon: <UpdateIcon />, link: '' },
     { text: 'Due', icon: <EventAvailableIcon />, link: '/due' },
 ]
 

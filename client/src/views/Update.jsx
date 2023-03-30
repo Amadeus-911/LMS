@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Stack } from '@mui/material'
+import { Stack, Box } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import { TextField } from '@mui/material'
 import { Autocomplete, Button } from '@mui/material'
 import axios from 'axios'
+import Toast from '../components/Utilities'
 
 const Form = ({ fields }) => {
     return (
@@ -31,6 +32,8 @@ const Update = () => {
     const [genre, setGenre] = useState('')
     const [stock, setStock] = useState(null)
     const [bookId, setBookId] = useState(null)
+
+    const [showToast, setShowToast] = useState(false)
 
     useEffect(() => {
         console.log('jik')
@@ -82,6 +85,10 @@ const Update = () => {
                 inStock: stock,
             })
             console.log(response.data)
+            setShowToast(true)
+            setTimeout(() => {
+                setShowToast(false)
+            }, 2000)
         } catch (error) {
             console.error(error)
         }
@@ -98,19 +105,22 @@ const Update = () => {
     const genres = ['Fiction', 'Non-Fiction', 'Novel']
 
     return (
-        <Stack spacing={1} sx={{ width: { xs: '250px', sm: '400px' } }}>
-            <Form fields={fields} />
-            <Autocomplete
-                disablePortal
-                id='combo-box-demo'
-                options={genres}
-                onChange={handleGenreChange}
-                renderInput={(params) => <TextField {...params} required type={'text'} label='Genre' value={genre} />}
-            />
-            <Button onClick={handleSubmit} variant='contained' startIcon={<AddIcon />}>
-                Update
-            </Button>
-        </Stack>
+        <Box style={{ position: 'relative' }}>
+            <Stack spacing={1} sx={{ width: { xs: '250px', sm: '400px' } }}>
+                <Form fields={fields} />
+                <Autocomplete
+                    disablePortal
+                    id='combo-box-demo'
+                    options={genres}
+                    onChange={handleGenreChange}
+                    renderInput={(params) => <TextField {...params} required type={'text'} label='Genre' value={genre} />}
+                />
+                <Button onClick={handleSubmit} variant='contained' startIcon={<AddIcon />}>
+                    Update
+                </Button>
+                {showToast && <Toast severity={'success'} msg='Book Added Successfully' />}
+            </Stack>
+        </Box>
     )
 }
 
