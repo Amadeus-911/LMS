@@ -43,8 +43,17 @@ const Books = () => {
     const [currBooks, setCurrBooks] = useState(0)
     const [totalBooks, setTotalBooks] = useState(0)
 
-    const userId = 1 // TODO get from local storage
-    const isAdmin = true
+    const userId = localStorage.getItem('userId')
+    console.log(userId)
+
+    const role = localStorage.getItem('role')
+    let isAdmin = false
+
+    if (role === 'admin') {
+        isAdmin = true
+    } else {
+        isAdmin = false
+    }
 
     useEffect(() => {
         const fetchData = async () => {

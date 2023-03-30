@@ -56,4 +56,14 @@ const login = async (req, res) => {
     }
 }
 
-module.exports = { createUser, login }
+const logout = (req, res) => {
+    try {
+        localStorage.removeItem('token')
+        res.status(200).json({ message: 'Logout successful' })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Internal Error' })
+    }
+}
+
+module.exports = { createUser, login, logout }
