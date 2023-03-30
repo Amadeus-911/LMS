@@ -7,12 +7,13 @@ const createUser = async (req, res) => {
     try {
         const name = req.body.name
         const email = req.body.email
+        const role = req.body.role
         const password = req.body.password
 
         const salt = await bcrypt.genSalt(10)
         const hash = await bcrypt.hash(password, salt)
 
-        const user = { name: name, email: email, password: hash }
+        const user = { name: name, email: email, password: hash, role: role }
 
         //db save
         const userData = await User.create(user)
@@ -28,9 +29,7 @@ const login = async (req, res) => {
         const email = req.body.email
         const password = req.body.password
 
-        const user = await User.findOne({
-            where: { email },
-        })
+        const user = await User.findOne({ where: { email } })
 
         if (user) {
             const userPass = user.password
@@ -40,7 +39,7 @@ const login = async (req, res) => {
                     console.error(error)
                 } else if (isMatch) {
                     //generate token and send it
-                    //todo change payload
+                    console.log('match')
                     const payload = { email: email, userId: user.id, role: user.role }
                     const secret = process.env.JWT_SECRET
                     const token = jwt.sign(payload, secret, { expiresIn: process.env.TOKEN_EXPIRY })
@@ -49,6 +48,8 @@ const login = async (req, res) => {
                     res.status(200).json({ message: 'Invalid Email or Password' })
                 }
             })
+        } else {
+            res.status(404).json({ status: 'no such user with those credentials exist' })
         }
     } catch (error) {
         console.error(error)

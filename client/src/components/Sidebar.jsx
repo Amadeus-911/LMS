@@ -18,7 +18,7 @@ let list = []
 
 if (role === 'admin') {
     list = [
-        { text: 'Profile', icon: <PersonIcon />, link: '/profile' },
+        { text: 'Add a User', icon: <PersonIcon />, link: '/adduser' },
         { text: 'Books', icon: <LibraryBooksIcon />, link: '/books' },
         { text: 'Add', icon: <AddToPhotosIcon />, link: '/add' },
         { text: 'Update', icon: <UpdateIcon />, link: '' },
@@ -41,20 +41,20 @@ const Item = ({ text, icon, link }) => {
     const isActive = link === pathname
     let ListItemBut = null
     if (isActive) {
-        ListItemBut = styled(ListItemButton)({
-            backgroundColor: 'grey',
+        ListItemBut = styled(ListItem)({
+            backgroundColor: 'darkgrey',
         })
     } else {
-        ListItemBut = styled(ListItemButton)({})
+        ListItemBut = styled(ListItem)({})
     }
 
     return (
-        <ListItem disablePadding>
-            <ListItemBut sx={{ paddingX: '20px' }} component={Link} to={link}>
+        <ListItemBut disablePadding>
+            <ListItemButton sx={{ paddingX: '20px' }} component={Link} to={link}>
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText primary={text} />
-            </ListItemBut>
-        </ListItem>
+            </ListItemButton>
+        </ListItemBut>
     )
 }
 
